@@ -1,0 +1,23 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+
+# Local env + secrets
+.env
+
+# Virtual envs
+.venv/
+marvellore-ci/.venv/
+
+# MarvelLore CI generated artifacts
+marvellore-ci/data/marvellore.db
+marvellore-ci/data/pdfs/*.pdf
+
+# Ignore generated knowledge outputs, keep folder markers
+marvellore-ci/data/knowledge/*
+!marvellore-ci/data/knowledge/.gitkeep
+
+# Similarly keep pdf folder marker if present
+marvellore-ci/data/pdfs/*
+!marvellore-ci/data/pdfs/.gitkeep
+

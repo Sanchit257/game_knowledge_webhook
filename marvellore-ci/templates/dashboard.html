@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MarvelLore CI — Dashboard</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body class="marvel-bg">
+    <div class="container py-4">
+      <header class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div>
+          <div class="d-flex align-items-center gap-2">
+            <span class="marvel-logo">MarvelLore</span><span class="text-light fw-semibold">CI</span>
+            <span class="online-dot" title="System Online"></span>
+            <span class="text-success small">System Online</span>
+          </div>
+          <div class="text-secondary small">Live lore integrity audits</div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+          {% if tunnel_url %}
+            <span class="badge marvel-badge-url">
+              <span class="text-secondary me-1">ngrok</span>
+              <a class="link-light text-decoration-none" href="{{ tunnel_url }}" target="_blank" rel="noreferrer">{{ tunnel_url }}</a>
+            </span>
+          {% else %}
+            <span class="badge text-bg-secondary">ngrok not started</span>
+          {% endif %}
+          <a class="btn btn-outline-light btn-sm" href="{{ url_for('dashboard.characters') }}">Characters</a>
+        </div>
+      </header>
+
+      <div class="row g-3 mb-4">
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="card marvel-card">
+            <div class="card-body">
+              <div class="text-secondary small">Total Audits Run</div>
+              <div class="display-6 text-light mb-0">{{ total_audits_run }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="card marvel-card">
+            <div class="card-body">
+              <div class="text-secondary small">Issues Caught</div>
+              <div class="display-6 text-light mb-0">{{ issues_caught }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="card marvel-card">
+            <div class="card-body">
+              <div class="text-secondary small">Characters Indexed</div>
+              <div class="display-6 text-light mb-0">{{ knowledge_summary.characters }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="card marvel-card">
+            <div class="card-body">
+              <div class="text-secondary small">Factions Tracked</div>
+              <div class="display-6 text-light mb-0">{{ knowledge_summary.factions }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-12 col-lg-8">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <h2 class="h5 text-light mb-0">Recent Audits</h2>
+            <span class="text-secondary small">Auto-refresh every 10s</span>
+          </div>
+          <div id="auditsFeed">
+            {% for audit in audits %}
+              {% include 'partials/audit_card.html' %}
+            {% else %}
+              <div class="card marvel-card">
+                <div class="card-body text-secondary">No audits yet.</div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+          <div class="card marvel-card mb-3">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h2 class="h6 text-light mb-1">Knowledge Base</h2>
+                  <div class="text-secondary small">
+                    {% if knowledge_summary.last_scraped %}
+                      Last scraped {{ knowledge_summary.last_scraped }}
+                    {% else %}
+                      Not scraped yet
+                    {% endif %}
+                  </div>
+                </div>
+                <a class="btn btn-sm btn-outline-light" href="{{ url_for('dashboard.characters') }}">Browse</a>
+              </div>
+
+              {% if knowledge_summary.error %}
+                <div class="alert alert-warning mt-3 mb-0">
+                  {{ knowledge_summary.error }}
+                </div>
+              {% else %}
+                <hr class="border-secondary" />
+                <div class="text-secondary small mb-2">Factions</div>
+                <div class="kb-factions">
+                  {% for f in knowledge_summary.faction_members %}
+                    <div class="d-flex justify-content-between small mb-1">
+                      <span class="text-light">{{ f.name }}</span>
+                      <span class="text-secondary">{{ f.members_count }}</span>
+                    </div>
+                  {% else %}
+                    <div class="text-secondary small">No faction data.</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="card marvel-card">
+            <div class="card-body">
+              <h2 class="h6 text-light mb-2">System Log</h2>
+              <div class="system-log">
+                {% for e in webhook_log %}
+                  <div class="log-line">
+                    <span class="text-secondary">{{ e.timestamp }}</span>
+                    <span class="text-light">{{ e.event }}</span>
+                    <span class="text-secondary">{{ e.result }}</span>
+                  </div>
+                {% else %}
+                  <div class="text-secondary small">No events logged yet.</div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      const feed = document.getElementById("auditsFeed");
+      let knownIds = new Set(
+        Array.from(feed.querySelectorAll("[data-audit-id]")).map((el) => el.dataset.auditId)
+      );
+
+      function statusBadge(status) {
+        if (status === "clean") return "success";
+        if (status === "warnings") return "warning";
+        return "danger";
+      }
+
+      function renderAuditCard(a) {
+        const badge = statusBadge(a.status);
+        const sha = (a.commit_sha || "").slice(0, 7);
+        const dur = (a.duration_seconds || 0).toFixed(2);
+        return `
+          <div class="audit-card audit-card-enter" data-audit-id="${a.id}">
+            <div class="card marvel-card mb-3">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div>
+                    <div class="text-secondary small">${a.repo || ""}</div>
+                    <div class="h6 mb-1 text-light">
+                      PR #${a.pr_number} • <span class="text-secondary">Audit ${a.id}</span>
+                    </div>
+                    <div class="text-secondary small">
+                      ${a.triggered_at || ""}${sha ? ` • <code class="text-secondary">${sha}</code>` : ""}
+                    </div>
+                  </div>
+                  <span class="badge text-bg-${badge}">${a.status}</span>
+                </div>
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                  <span class="badge rounded-pill text-bg-secondary">Issues: ${a.issues_found ?? 0}</span>
+                  <span class="badge rounded-pill text-bg-secondary">Duration: ${dur}s</span>
+                </div>
+                <div class="mt-3">
+                  <a class="btn btn-sm btn-outline-light" href="/audit/${a.id}">View Details</a>
+                </div>
+              </div>
+            </div>
+          </div>`;
+      }
+
+      async function refreshAudits() {
+        try {
+          const res = await fetch("/api/audits", { cache: "no-store" });
+          if (!res.ok) return;
+          const audits = await res.json();
+          if (!Array.isArray(audits)) return;
+
+          const nextHtml = audits.map(renderAuditCard).join("");
+          feed.innerHTML = nextHtml || `
+            <div class="card marvel-card">
+              <div class="card-body text-secondary">No audits yet.</div>
+            </div>`;
+
+          const nextIds = new Set(audits.map((a) => String(a.id)));
+          feed.querySelectorAll("[data-audit-id]").forEach((el) => {
+            if (!knownIds.has(el.dataset.auditId)) {
+              el.classList.add("audit-card-enter");
+            }
+          });
+          knownIds = nextIds;
+        } catch (e) {}
+      }
+
+      setInterval(refreshAudits, 10000);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,94 @@
+{
+  "last_updated": "2026-04-19T00:00:00Z",
+  "errata": [],
+  "characters": [
+    {
+      "name": "SPIDER-MAN",
+      "faction": "Avengers/Solo",
+      "rank": 4,
+      "abilities": ["Wall-Crawling", "Spider-Sense", "Web-Slinging"],
+      "stats": { "melee": 4, "agility": 7, "resilience": 4, "vigilance": 4, "ego": 4, "logic": 4 },
+      "description": "Friendly neighborhood hero with enhanced agility and reflexes."
+    },
+    {
+      "name": "IRON MAN",
+      "faction": "Avengers",
+      "rank": 5,
+      "abilities": ["Powered Armor", "Repulsors", "Genius Inventor"],
+      "stats": { "melee": 3, "agility": 3, "resilience": 4, "vigilance": 5, "ego": 4, "logic": 7 },
+      "description": "Armored Avenger leveraging advanced tech and tactical intelligence."
+    },
+    {
+      "name": "CAPTAIN AMERICA",
+      "faction": "Avengers",
+      "rank": 5,
+      "abilities": ["Vibranium Shield", "Tactical Leadership", "Peak Human"],
+      "stats": { "melee": 6, "agility": 5, "resilience": 6, "vigilance": 5, "ego": 5, "logic": 4 },
+      "description": "Super-soldier leader and symbol of courage."
+    },
+    {
+      "name": "WOLVERINE",
+      "faction": "X-Men",
+      "rank": 4,
+      "abilities": ["Adamantium Claws", "Healing Factor", "Heightened Senses"],
+      "stats": { "melee": 7, "agility": 5, "resilience": 7, "vigilance": 4, "ego": 4, "logic": 3 },
+      "description": "Ferocious mutant brawler with extreme resilience."
+    },
+    {
+      "name": "BLACK PANTHER",
+      "faction": "Avengers/Wakanda",
+      "rank": 5,
+      "abilities": ["Vibranium Suit", "King of Wakanda", "Martial Arts Master"],
+      "stats": { "melee": 6, "agility": 6, "resilience": 5, "vigilance": 6, "ego": 4, "logic": 6 },
+      "description": "Wakandan king, strategist, and elite combatant."
+    },
+    {
+      "name": "THOR",
+      "faction": "Avengers/Asgard",
+      "rank": 6,
+      "abilities": ["Mjolnir", "God of Thunder", "Flight"],
+      "stats": { "melee": 7, "agility": 4, "resilience": 7, "vigilance": 5, "ego": 5, "logic": 3 },
+      "description": "Asgardian god wielding immense power and durability."
+    },
+    {
+      "name": "HULK",
+      "faction": "Avengers/Solo",
+      "rank": 6,
+      "abilities": ["Super Strength", "Gamma Rage", "Unbreakable"],
+      "stats": { "melee": 8, "agility": 2, "resilience": 8, "vigilance": 3, "ego": 3, "logic": 2 },
+      "description": "Gamma-powered juggernaut; unstoppable in close combat."
+    },
+    {
+      "name": "DOCTOR STRANGE",
+      "faction": "Defenders/Solo",
+      "rank": 5,
+      "abilities": ["Sorcery", "Astral Projection", "Mystic Shields"],
+      "stats": { "melee": 2, "agility": 3, "resilience": 4, "vigilance": 6, "ego": 7, "logic": 6 },
+      "description": "Master of the mystic arts, specialized in ego-based powers."
+    },
+    {
+      "name": "SCARLET WITCH",
+      "faction": "Avengers",
+      "rank": 5,
+      "abilities": ["Chaos Magic", "Hex Bolts", "Reality Warping"],
+      "stats": { "melee": 1, "agility": 3, "resilience": 4, "vigilance": 5, "ego": 7, "logic": 5 },
+      "description": "Chaos magic wielder with powerful ego-focused attacks."
+    },
+    {
+      "name": "STORM",
+      "faction": "X-Men",
+      "rank": 5,
+      "abilities": ["Weather Control", "Flight", "Leadership"],
+      "stats": { "melee": 3, "agility": 5, "resilience": 5, "vigilance": 6, "ego": 6, "logic": 4 },
+      "description": "Mutant leader with broad elemental control and strong vigilance."
+    }
+  ],
+  "factions": [
+    { "name": "Avengers", "members": ["SPIDER-MAN", "IRON MAN", "CAPTAIN AMERICA", "BLACK PANTHER", "THOR", "HULK", "SCARLET WITCH"] },
+    { "name": "X-Men", "members": ["WOLVERINE", "STORM"] },
+    { "name": "Wakanda", "members": ["BLACK PANTHER"] },
+    { "name": "Asgard", "members": ["THOR"] },
+    { "name": "Defenders", "members": ["DOCTOR STRANGE"] }
+  ]
+}
+

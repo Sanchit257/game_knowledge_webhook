@@ -1,0 +1,43 @@
+{% set status = (audit.status or 'warnings') %}
+{% if status == 'clean' %}
+  {% set badge = 'success' %}
+{% elif status == 'warnings' %}
+  {% set badge = 'warning' %}
+{% else %}
+  {% set badge = 'danger' %}
+{% endif %}
+
+<div class="audit-card" data-audit-id="{{ audit.id }}">
+  <div class="card marvel-card mb-3">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="text-secondary small">{{ audit.repo }}</div>
+          <div class="h6 mb-1 text-light">
+            PR #{{ audit.pr_number }} • <span class="text-secondary">Audit {{ audit.id }}</span>
+          </div>
+          <div class="text-secondary small">
+            {{ audit.triggered_at }}
+            {% if audit.commit_sha %} • <code class="text-secondary">{{ audit.commit_sha[:7] }}</code>{% endif %}
+          </div>
+        </div>
+        <span class="badge text-bg-{{ badge }}">{{ status }}</span>
+      </div>
+
+      <div class="d-flex flex-wrap gap-2 mt-3">
+        <span class="badge rounded-pill text-bg-secondary">
+          Issues: {{ audit.issues_found }}
+        </span>
+        <span class="badge rounded-pill text-bg-secondary">
+          Duration: {{ '%.2f'|format(audit.duration_seconds or 0.0) }}s
+        </span>
+      </div>
+
+      <div class="mt-3">
+        <a class="btn btn-sm btn-outline-light" href="{{ url_for('dashboard.audit_detail', audit_id=audit.id) }}">
+          View Details
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

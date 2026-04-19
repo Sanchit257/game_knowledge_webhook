@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Audit #{{ audit_id }} — MarvelLore CI</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body class="marvel-bg">
+    <div class="container py-4">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <a class="btn btn-outline-light btn-sm" href="{{ url_for('dashboard.dashboard_home') }}">
+          Back to Dashboard
+        </a>
+        <a class="btn btn-outline-light btn-sm" href="{{ url_for('dashboard.characters') }}">
+          Characters
+        </a>
+      </div>
+
+      <div class="card marvel-card mb-3">
+        <div class="card-body">
+          <div class="d-flex justify-content-between flex-wrap gap-2">
+            <div>
+              <div class="text-secondary small">{{ audit.repo if audit else '' }}</div>
+              <div class="h4 text-light mb-1">Audit #{{ audit_id }}</div>
+              {% if audit %}
+                <div class="text-secondary small">
+                  PR #{{ audit.pr_number }} • <code class="text-secondary">{{ audit.commit_sha[:7] }}</code> • {{ audit.triggered_at }}
+                </div>
+              {% endif %}
+            </div>
+            {% if audit %}
+              <div class="text-end">
+                <span class="badge text-bg-secondary">Duration {{ '%.2f'|format(audit.duration_seconds or 0.0) }}s</span>
+                <span class="badge text-bg-secondary ms-1">Issues {{ audit.issues_found }}</span>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      {% if audit is none %}
+        <div class="alert alert-warning">Audit not found.</div>
+      {% else %}
+        <div class="row g-3">
+          <div class="col-12 col-lg-7">
+            <h2 class="h5 text-light mb-2">Issues</h2>
+            {% for i in issues %}
+              {% set sev = i.severity or 'warning' %}
+              {% if sev == 'critical' %}
+                {% set cls = 'danger' %}
+              {% elif sev == 'warning' %}
+                {% set cls = 'warning' %}
+              {% else %}
+                {% set cls = 'secondary' %}
+              {% endif %}
+              <div class="card marvel-card border border-{{ cls }} mb-3">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <div class="h6 text-light mb-1">
+                        {{ i.character_name or '(unspecified)' }} • <span class="text-secondary">{{ i.issue_type }}</span>
+                      </div>
+                      <div class="text-secondary small">{{ i.description }}</div>
+                    </div>
+                    <span class="badge text-bg-{{ cls }}">{{ sev }}</span>
+                  </div>
+                  <div class="mt-3">
+                    <div class="row g-2">
+                      <div class="col-12 col-md-6">
+                        <div class="text-secondary small mb-1">Official</div>
+                        <div class="code-box">{{ i.official_value }}</div>
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <div class="text-secondary small mb-1">Submitted</div>
+                        <div class="code-box">{{ i.submitted_value }}</div>
+                      </div>
+                    </div>
+                    {% if i.suggestion %}
+                      <div class="text-secondary small mt-2">Suggestion</div>
+                      <div class="text-light">{{ i.suggestion }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              <div class="card marvel-card">
+                <div class="card-body text-secondary">No issues recorded for this audit.</div>
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="col-12 col-lg-5">
+            <h2 class="h5 text-light mb-2">PR Comment Preview</h2>
+            <div class="card marvel-card">
+              <div class="card-body">
+                <pre class="comment-preview">{{ comment_preview }}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
